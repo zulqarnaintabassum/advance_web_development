@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= title %></title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --primary:    #0f62fe;
+      --primary-dk: #0043ce;
+      --accent:     #ee5522;
+      --dark:       #0a0a12;
+      --card-bg:    #ffffff;
+      --muted:      #6b7280;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dark);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated mesh background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, #0f62fe22 0%, transparent 60%),
+        radial-gradient(ellipse 60% 70% at 80% 90%, #ee552218 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 50% 50%, #0a0a1a 0%, #0a0a12 100%);
+      z-index: 0;
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: drift 12s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -80px; animation-delay: 0s; }
+    .orb-2 { width: 300px; height: 300px; background: var(--accent);  bottom: -80px; right: -60px; animation-delay: -4s; }
+    .orb-3 { width: 200px; height: 200px; background: #9333ea;        top: 40%; left: 60%; animation-delay: -8s; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.08); }
+    }
+
+    /* Card wrapper */
+    .signup-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 520px;
+      padding: 1rem;
+      animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .signup-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 2.5rem 2.5rem;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    }
+
+    /* Brand */
+    .brand-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-left: 3px;
+      vertical-align: middle;
+    }
+
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .card-subtitle {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.875rem;
+      margin-top: 4px;
+    }
+
+    /* Labels */
+    .form-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    /* Input group */
+    .input-group-text {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-right: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .form-control {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-left: none;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.65rem 1rem;
+      transition: all 0.25s;
+    }
+
+    .form-control::placeholder { color: rgba(255,255,255,0.25); }
+
+    .form-control:focus {
+      background: rgba(15,98,254,0.1);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: none;
+      outline: none;
+    }
+
+    .form-control:focus + .input-group-text,
+    .input-group:focus-within .input-group-text {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(15,98,254,0.08);
+    }
+
+    /* Password toggle */
+    .pass-toggle {
+      cursor: pointer;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-left: none;
+      color: rgba(255,255,255,0.4);
+      padding: 0 0.85rem;
+      transition: all 0.2s;
+    }
+    .pass-toggle:hover { color: var(--primary); }
+
+    /* Gender select */
+    .form-select {
+      background-color: rgba(255,255,255,0.06);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba(255,255,255,0.4)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.65rem 1rem;
+    }
+    .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: none;
+      background-color: rgba(15,98,254,0.1);
+      color: #fff;
+    }
+    .form-select option { background: #1a1a2e; color: #fff; }
+
+    /* Strength bar */
+    .strength-bar {
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+    .strength-text {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+      margin-top: 3px;
+    }
+
+    /* Checkbox */
+    .form-check-input {
+      background-color: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      width: 1.1em; height: 1.1em;
+    }
+    .form-check-input:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+    .form-check-label {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.83rem;
+    }
+    .form-check-label a {
+      color: rgba(100,160,255,0.9);
+      text-decoration: none;
+    }
+    .form-check-label a:hover { text-decoration: underline; }
+
+    /* Submit button */
+    .btn-signup {
+      background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.8rem;
+      width: 100%;
+      letter-spacing: 0.02em;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(15,98,254,0.35);
+    }
+    .btn-signup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(15,98,254,0.45);
+      color: #fff;
+    }
+    .btn-signup:active { transform: translateY(0); }
+    .btn-signup::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-signup:hover::after { transform: translateX(100%); }
+
+    /* Divider */
+    .divider-text {
+      position: relative;
+      text-align: center;
+      color: rgba(255,255,255,0.2);
+      font-size: 0.78rem;
+    }
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+    .divider-text::before { left: 0; }
+    .divider-text::after  { right: 0; }
+
+    /* Social buttons */
+    .btn-social {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.82rem;
+      padding: 0.6rem;
+      transition: all 0.2s;
+      flex: 1;
+    }
+    .btn-social:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    /* Alerts */
+    .alert-glass {
+      border-radius: 12px;
+      font-size: 0.875rem;
+      padding: 0.75rem 1rem;
+      border: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .alert-danger-glass {
+      background: rgba(239,68,68,0.15);
+      color: #fca5a5;
+      border-left: 3px solid #ef4444;
+    }
+    .alert-success-glass {
+      background: rgba(16,185,129,0.15);
+      color: #6ee7b7;
+      border-left: 3px solid #10b981;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Sign in link */
+    .signin-text {
+      text-align: center;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.83rem;
+      margin-top: 1.25rem;
+    }
+    .signin-text a {
+      color: rgba(100,160,255,0.9);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .signin-text a:hover { text-decoration: underline; }
+
+    /* Step indicator */
+    .step-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .step-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+    }
+    .step-dot.active {
+      width: 22px;
+      border-radius: 3px;
+      background: var(--primary);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="signup-wrapper">
+    <div class="signup-card">
+
+      <!-- Brand -->
+      <div class="mb-4">
+        <div class="step-dots">
+          <div class="step-dot active"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+        <h1 class="card-title">Create account <span class="brand-dot"></span></h1>
+        <p class="card-subtitle">Join us today — it's completely free</p>
+      </div>
+
+      <!-- Alerts -->
+      <% if (error) { %>
+        <div class="alert alert-glass alert-danger-glass d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          <%= error %>
+        </div>
+      <% } %>
+
+      <% if (success) { %>
+        <div class="alert alert-glass alert-success-glass d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-check-circle-fill"></i>
+          <%= success %>
+        </div>
+      <% } %>
+
+      <!-- Form -->
+      <form action="/signup" method="POST" novalidate>
+
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input
+              type="text"
+              name="fullname"
+              class="form-control"
+              placeholder="Ali Hassan"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              placeholder="ali@example.com"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+          <label class="form-label">Gender</label>
+          <select name="gender" class="form-select">
+            <option value="" disabled selected>Select your gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer-not">Prefer not to say</option>
+          </select>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="form-control"
+              placeholder="Min. 8 characters"
+              required
+              oninput="checkStrength(this.value)"
+            />
+            <button type="button" class="pass-toggle btn" onclick="togglePass('password', this)">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="strength-bar mt-2">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <div class="strength-text" id="strengthText"></div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-3">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+            <input
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
+              class="form-control"
+              placeholder="Re-enter password"
+              required
+            />
+            <button type="button" class="pass-toggle btn" onclick="togglePass('confirmPassword', this)">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" name="terms" id="terms" />
+          <label class="form-check-label" for="terms">
+            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-signup">
+          Create My Account &nbsp;<i class="bi bi-arrow-right"></i>
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="divider-text my-4">or continue with</div>
+
+      <!-- Social -->
+      <div class="d-flex gap-2 mb-2">
+        <button class="btn btn-social">
+          <i class="bi bi-google me-1"></i> Google
+        </button>
+        <button class="btn btn-social">
+          <i class="bi bi-github me-1"></i> GitHub
+        </button>
+        <button class="btn btn-social">
+          <i class="bi bi-twitter-x me-1"></i> X
+        </button>
+      </div>
+
+      <!-- Sign in -->
+      <p class="signin-text">
+        Already have an account? <a href="#">Sign in</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function togglePass(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      const icon  = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('bi-eye', 'bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.replace('bi-eye-slash', 'bi-eye');
+      }
+    }
+
+    function checkStrength(val) {
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+      let score = 0;
+      if (val.length >= 8)                          score++;
+      if (/[A-Z]/.test(val))                        score++;
+      if (/[0-9]/.test(val))                        score++;
+      if (/[^A-Za-z0-9]/.test(val))                score++;
+
+      const levels = [
+        { pct: '0%',   color: '',          label: '' },
+        { pct: '25%',  color: '#ef4444',   label: 'Weak' },
+        { pct: '50%',  color: '#f97316',   label: 'Fair' },
+        { pct: '75%',  color: '#eab308',   label: 'Good' },
+        { pct: '100%', color: '#22c55e',   label: 'Strong' },
+      ];
+
+      fill.style.width      = levels[score].pct;
+      fill.style.background = levels[score].color;
+      text.textContent      = val ? levels[score].label : '';
+      text.style.color      = levels[score].color;
+    }
+  </script>
+</body>
+</html>
