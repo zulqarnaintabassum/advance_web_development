@@ -1,0 +1,51 @@
+<div style="background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 22px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: default;"
+     onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.09)'; this.style.borderColor='#c7d2fe'"
+     onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0'">
+
+  <!-- Emoji Icon -->
+  <div style="font-size: 2.5rem; text-align: center; padding: 10px 0;">{{ product.emoji }}</div>
+
+  <!-- Name -->
+  <h3 style="margin: 0; color: #0f172a; font-size: 1rem; font-weight: 700;
+             text-align: center; letter-spacing: -0.2px;">
+    {{ product.name }}
+  </h3>
+
+  <!-- Description -->
+  <p style="margin: 0; color: #64748b; font-size: 0.8rem; text-align: center;
+            line-height: 1.6; flex: 1;">
+    {{ product.description }}
+  </p>
+
+  <!-- Price + Button -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+    <span style="color: #f59e0b; font-size: 1.1rem; font-weight: 800;">
+      ${{ product.price.toFixed(2) }}
+    </span>
+    <button
+      [id]="'add-to-cart-' + product.name.replace(' ', '-')"
+      (click)="onAddToCart()"
+      style="background: linear-gradient(135deg, #6366f1, #8b5cf6);
+             border: none;
+             border-radius: 8px;
+             color: white;
+             cursor: pointer;
+             font-size: 0.8rem;
+             font-weight: 700;
+             padding: 8px 14px;
+             transition: opacity 0.15s ease, transform 0.1s ease;
+             box-shadow: 0 2px 8px rgba(99,102,241,0.35);"
+      onmouseenter="this.style.opacity='0.9'; this.style.transform='scale(1.03)'"
+      onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
+      + Add
+    </button>
+  </div>
+</div>

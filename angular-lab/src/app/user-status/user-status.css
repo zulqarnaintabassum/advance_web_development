@@ -1,0 +1,22 @@
+/* ngClass targets */
+.online-status {
+  animation: pulse-green 1.5s infinite;
+}
+.offline-status {
+  animation: none;
+}
+
+/* Badge classes (used with [ngClass]) */
+.online-badge {
+  background: #d1fae5;
+  color: #065f46;
+}
+.offline-badge {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.35); }
+  50%       { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.1); }
+}

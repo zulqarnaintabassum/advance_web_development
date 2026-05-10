@@ -1,0 +1,148 @@
+<section style="padding: 40px 32px; max-width: 1200px; margin: 0 auto;">
+
+  <!-- Page Header -->
+  <div style="margin-bottom: 36px;">
+    <a routerLink="/dashboard"
+       style="color: #6366f1; text-decoration: none; font-size: 0.8rem; font-weight: 600;
+              display: inline-flex; align-items: center; gap: 5px; margin-bottom: 16px;
+              background: #eef2ff; padding: 5px 12px; border-radius: 20px;">
+      ← Dashboard
+    </a>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h1 style="font-size: 1.9rem; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; margin-bottom: 6px;">
+          🛒 Task 1: Dynamic Shopping Cart
+        </h1>
+        <p style="color: #64748b; font-size: 0.9rem;">
+          Demonstrates <code style="background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:4px; font-weight:600;">*ngFor</code>
+          <code style="background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:4px; font-weight:600; margin-left:4px;">@Input</code>
+          <code style="background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:4px; font-weight:600; margin-left:4px;">@Output / EventEmitter&lt;Product&gt;</code>
+        </p>
+      </div>
+      <!-- Search -->
+      <div style="position: relative;">
+        <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+                     color: #94a3b8; font-size: 0.9rem;">🔍</span>
+        <input
+          [(ngModel)]="searchQuery"
+          placeholder="Search products…"
+          style="padding: 10px 16px 10px 36px; border: 1.5px solid #e2e8f0; border-radius: 10px;
+                 font-size: 0.875rem; font-family: Inter, sans-serif; color: #0f172a;
+                 background: #ffffff; outline: none; width: 220px;
+                 transition: border-color 0.2s ease;"
+          onfocus="this.style.borderColor='#6366f1'"
+          onblur="this.style.borderColor='#e2e8f0'"/>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 360px; gap: 28px; align-items: start;">
+
+    <!-- ── Product Grid ── -->
+    <div>
+      <!-- Empty search state via *ngIf -->
+      <div *ngIf="filteredProducts.length === 0"
+           style="text-align: center; padding: 60px 0; color: #94a3b8;">
+        <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
+        <p style="font-size: 0.9rem;">No products match "{{ searchQuery }}"</p>
+      </div>
+
+      <!-- Product cards via *ngFor -->
+      <div *ngIf="filteredProducts.length > 0"
+           style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;">
+        <app-product-card
+          *ngFor="let product of filteredProducts"
+          [product]="product"
+          (addedToCart)="onProductAddedToCart($event)">
+        </app-product-card>
+      </div>
+    </div>
+
+    <!-- ── Cart Panel ── -->
+    <aside style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px;
+                  padding: 24px; position: sticky; top: 80px;
+                  box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+
+      <!-- Cart Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center;
+                  margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+        <div>
+          <h2 style="color: #0f172a; font-size: 1rem; font-weight: 800; margin: 0;">
+            Shopping Cart
+          </h2>
+          <!-- *ngIf: item count only when cart has items -->
+          <span *ngIf="cartItems.length > 0"
+                style="color: #64748b; font-size: 0.78rem;">
+            {{ totalItems }} item{{ totalItems !== 1 ? 's' : '' }} · ${{ cartTotal.toFixed(2) }} total
+          </span>
+        </div>
+        <!-- *ngIf: clear button only when cart has items -->
+        <button *ngIf="cartItems.length > 0"
+                id="clear-cart-btn"
+                (click)="clearCart()"
+                style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
+                       color: #ef4444; cursor: pointer; font-size: 0.78rem; font-weight: 600;
+                       padding: 6px 12px; transition: background 0.15s ease;"
+                onmouseenter="this.style.background='#fee2e2'"
+                onmouseleave="this.style.background='#fef2f2'">
+          🗑️ Clear
+        </button>
+      </div>
+
+      <!-- Empty State via *ngIf -->
+      <div *ngIf="cartItems.length === 0"
+           style="text-align: center; padding: 36px 0; color: #94a3b8;">
+        <div style="font-size: 2.8rem; margin-bottom: 10px;">🛒</div>
+        <p style="font-size: 0.85rem; font-weight: 500;">Your cart is empty</p>
+        <p style="font-size: 0.75rem; margin-top: 4px;">Add products from the grid</p>
+      </div>
+
+      <!-- Cart Items via *ngFor (shown only when cart has items) -->
+      <div *ngIf="cartItems.length > 0">
+        <ul style="list-style: none; display: flex; flex-direction: column;
+                   gap: 10px; margin-bottom: 18px;">
+          <li *ngFor="let item of cartItems"
+              style="background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px;
+                     padding: 12px 14px; display: flex; justify-content: space-between;
+                     align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <span style="font-size: 1.4rem; flex-shrink: 0;">{{ item.emoji }}</span>
+              <div style="min-width: 0;">
+                <div style="color: #0f172a; font-size: 0.85rem; font-weight: 600;
+                             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  {{ item.name }}
+                </div>
+                <div style="color: #94a3b8; font-size: 0.75rem; margin-top: 1px;">
+                  {{ item.quantity }} × ${{ item.price.toFixed(2) }}
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <span style="color: #f59e0b; font-weight: 700; font-size: 0.9rem;">
+                ${{ (item.quantity * item.price).toFixed(2) }}
+              </span>
+              <button
+                (click)="removeItem(item.name)"
+                style="background: none; border: none; cursor: pointer; color: #cbd5e1;
+                       font-size: 1rem; line-height: 1; padding: 2px 4px; border-radius: 4px;
+                       transition: color 0.15s ease;"
+                onmouseenter="this.style.color='#ef4444'"
+                onmouseleave="this.style.color='#cbd5e1'">×</button>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Total -->
+        <div style="background: linear-gradient(135deg, #fef3c7, #fde68a);
+                    border: 1px solid #fcd34d; border-radius: 12px;
+                    padding: 14px 16px; display: flex; justify-content: space-between;
+                    align-items: center;">
+          <span style="color: #78350f; font-weight: 700; font-size: 0.9rem;">Grand Total</span>
+          <span style="color: #b45309; font-size: 1.3rem; font-weight: 900;">
+            ${{ cartTotal.toFixed(2) }}
+          </span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

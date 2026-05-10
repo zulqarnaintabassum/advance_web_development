@@ -1,0 +1,49 @@
+<div style="background: #ffffff; border: 1.5px solid #d8b4fe;
+            border-radius: 20px; padding: 28px; text-align: center;
+            flex: 1; box-shadow: 0 4px 20px rgba(139,92,246,0.08);">
+
+  <!-- Header Badge -->
+  <div style="display: inline-block; background: #faf5ff; border: 1px solid #e9d5ff;
+              border-radius: 20px; padding: 5px 14px; margin-bottom: 20px;">
+    <span style="color: #8b5cf6; font-size: 0.72rem; font-weight: 700;
+                 letter-spacing: 1.5px; text-transform: uppercase;">🟣 Component Two</span>
+  </div>
+
+  <!-- Count Display via interpolation -->
+  <div style="color: #0f172a; font-size: 5rem; font-weight: 900; line-height: 1;
+              margin-bottom: 8px; font-variant-numeric: tabular-nums; letter-spacing: -2px;">
+    {{ counterService.currentCount }}
+  </div>
+  <div style="color: #94a3b8; font-size: 0.78rem; margin-bottom: 24px; font-weight: 500;">
+    counterService.currentCount
+  </div>
+
+  <!-- Buttons -->
+  <div style="display: flex; gap: 12px; justify-content: center;">
+    <button
+      id="counter-two-decrement"
+      (click)="counterService.decrement()"
+      style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 12px;
+             color: #ef4444; cursor: pointer; font-size: 1.4rem; font-weight: 800;
+             padding: 10px 26px; transition: all 0.15s ease;"
+      onmouseenter="this.style.background='#fee2e2'; this.style.transform='scale(1.05)'"
+      onmouseleave="this.style.background='#fef2f2'; this.style.transform='scale(1)'">
+      −
+    </button>
+    <button
+      id="counter-two-increment"
+      (click)="counterService.increment()"
+      style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px;
+             color: #22c55e; cursor: pointer; font-size: 1.4rem; font-weight: 800;
+             padding: 10px 26px; transition: all 0.15s ease;"
+      onmouseenter="this.style.background='#dcfce7'; this.style.transform='scale(1.05)'"
+      onmouseleave="this.style.background='#f0fdf4'; this.style.transform='scale(1)'">
+      +
+    </button>
+  </div>
+
+  <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #f1f5f9;
+              font-size: 0.72rem; color: #cbd5e1; font-family: monospace;">
+    inject(CounterService)
+  </div>
+</div>

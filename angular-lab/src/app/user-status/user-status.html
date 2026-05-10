@@ -1,0 +1,117 @@
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+
+  <!-- ── Main Status Card ── -->
+  <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px;
+              padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+
+    <!-- Avatar + Indicator -->
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 28px;">
+      <div style="position: relative; flex-shrink: 0;">
+        <div style="width: 72px; height: 72px; border-radius: 50%;
+                    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 2rem; box-shadow: 0 4px 16px rgba(99,102,241,0.35);">
+          👤
+        </div>
+        <!-- ngStyle: dynamic dot color -->
+        <div
+          [ngClass]="{ 'online-status': isOnline, 'offline-status': !isOnline }"
+          [ngStyle]="{ 'background-color': isOnline ? '#22c55e' : '#ef4444' }"
+          style="position: absolute; bottom: 2px; right: 2px;
+                 width: 18px; height: 18px; border-radius: 50%;
+                 border: 3px solid #ffffff; transition: background-color 0.3s ease;">
+        </div>
+      </div>
+
+      <div>
+        <h3 style="color: #0f172a; font-size: 1.1rem; font-weight: 800; margin-bottom: 4px;">
+          Zulqarnain Tabassum
+        </h3>
+        <!-- Interpolation: statusMessage -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 0.85rem; font-weight: 600;"
+                [ngStyle]="{ 'color': isOnline ? '#16a34a' : '#dc2626' }">
+            ● {{ statusMessage }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+      <div style="background: #f8fafc; border-radius: 10px; padding: 14px;">
+        <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 700;
+                    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Role</div>
+        <div style="color: #0f172a; font-size: 0.875rem; font-weight: 600;"> Software Developer</div>
+      </div>
+      <div style="background: #f8fafc; border-radius: 10px; padding: 14px;">
+        <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 700;
+                    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Status</div>
+        <!-- ngClass applied to the badge -->
+        <span [ngClass]="{ 'online-badge': isOnline, 'offline-badge': !isOnline }"
+              style="font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;">
+          {{ statusMessage }}
+        </span>
+      </div>
+    </div>
+
+    <!-- *ngIf: Last Seen block — only when offline -->
+    <div *ngIf="!isOnline"
+         style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px;
+                padding: 14px 16px; margin-bottom: 20px; display: flex;
+                align-items: center; gap: 10px;">
+      <span style="font-size: 1.2rem;">🕐</span>
+      <div>
+        <div style="font-size: 0.7rem; color: #9ca3af; font-weight: 700;
+                    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Last Seen</div>
+        <!-- Interpolation + Date pipe -->
+        <div style="color: #dc2626; font-size: 0.875rem; font-weight: 600;">
+          {{ lastSeen | date: 'EEEE, MMM d · h:mm:ss a' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button
+      id="toggle-status-btn"
+      (click)="toggleStatus()"
+      [ngStyle]="{ 'background': isOnline
+        ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+        : 'linear-gradient(135deg, #22c55e, #16a34a)' }"
+      style="border: none; border-radius: 12px; color: white; cursor: pointer;
+             font-size: 0.95rem; font-weight: 700; padding: 14px;
+             transition: opacity 0.2s ease, transform 0.1s ease; width: 100%;
+             box-shadow: 0 3px 10px rgba(0,0,0,0.15);"
+      onmouseenter="this.style.opacity='0.88'; this.style.transform='scale(1.01)'"
+      onmouseleave="this.style.opacity='1'; this.style.transform='scale(1)'">
+      {{ isOnline ? '🔴 Set Offline' : '🟢 Set Online' }}
+    </button>
+  </div>
+
+  <!-- ── Status History Log ── -->
+  <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px;
+              padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <h3 style="color: #0f172a; font-size: 0.95rem; font-weight: 800; margin-bottom: 20px;">
+      📋 Activity Log
+    </h3>
+
+    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;
+               max-height: 340px; overflow-y: auto;">
+      <li *ngFor="let entry of history"
+          style="display: flex; align-items: center; gap: 12px;
+                 background: #f8fafc; border-radius: 10px; padding: 10px 14px;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;"
+             [ngStyle]="{ 'background-color': entry.status === 'Online' ? '#22c55e' : '#ef4444' }">
+        </div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 0.82rem; font-weight: 700; color: #0f172a;">
+            {{ entry.status }}
+          </div>
+          <div style="font-size: 0.72rem; color: #94a3b8;">
+            {{ entry.time | date: 'h:mm:ss a' }}
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
